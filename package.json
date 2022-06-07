@@ -4,7 +4,7 @@
   "description": "Frontend quasar project for ramani-expenses API",
   "productName": "Ramani Expenses Project",
   "author": "KWangechi <rachel.karanja@strathmore.edu>",
-  "private": true,
+  "private": false,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
