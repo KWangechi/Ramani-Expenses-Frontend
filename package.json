@@ -48,8 +48,8 @@
     "last 5 Opera versions"
   ],
   "engines": {
-    "node": "16.x",
-    "npm": "8.x",
-    "yarn": "1.x"
+    "node": "16.14.2",
+    "npm": "8.10.0",
+    "yarn": "1.22.18"
   }
 }
