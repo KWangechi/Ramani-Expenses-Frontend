@@ -130,18 +130,8 @@ export default defineComponent({
     }),
   },
   created() {
-    if(!this.store.setUser()){
-      this.$q.notify({
-        message: 'You need to login first',
-        textColor: "white-5",
-        type: "info",
-      })
-
-      this.$router.push('/login');
-    }
-
     this.store.getUser();
-    // console.log(this.store.user);
+    
   },
   methods: {
     logout() {

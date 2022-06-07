@@ -39,8 +39,6 @@
         </div>
       </template>
 
-
-
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
         <q-btn
@@ -236,7 +234,7 @@
     <q-btn fab icon="add" color="blue" to="/create-expense" />
   </q-page-sticky>
   </q-page>
-  
+
 </template>
 
 <script>
@@ -344,6 +342,7 @@ export default defineComponent({
       myPhoto: null,
       fileImageURL: "",
       total_balance: null,
+      store: useAuthStore()
     };
   },
 
@@ -368,7 +367,18 @@ export default defineComponent({
     })
   },
   created() {
-    // this.getAllExpenses();
+    // if(!this.store.setUser()){
+    //   this.$q.notify({
+    //     message: 'You need to login first',
+    //     textColor: "white-5",
+    //     type: "info",
+    //   })
+
+    //   this.$router.push('/login');
+    //   // this.$router.push('/register');
+    // }
+
+    // console.log("This page should continue")
 
   },
 
@@ -377,6 +387,9 @@ export default defineComponent({
     this.getLatestBalance();
   },
   methods: {
+    getUser(){
+      this.store.getUser();
+    },
     viewExpense(props) {
       api
         .get(`/expenses/${props.id}`, {
