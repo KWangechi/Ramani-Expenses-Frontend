@@ -19,7 +19,6 @@
 
     <q-drawer
       v-model="toggleLeftDrawer"
-      show-if-above
       :width="200"
       :breakpoint="400"
     >
@@ -131,7 +130,7 @@ export default defineComponent({
   },
   created() {
     this.store.getUser();
-    
+
   },
   methods: {
     logout() {
