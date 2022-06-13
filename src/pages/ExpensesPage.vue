@@ -11,10 +11,10 @@
   />
   <br />
   <br />
-  <q-page>
+  <q-page id="print-this">
     <q-table
       id="my-table-id"
-      class="q-ma-md large-screen-only"
+      class="q-ma-md large-screen-only print-this"
       title="My Expenses"
       :rows="expenses"
       :columns="columns"
@@ -441,6 +441,11 @@ export default defineComponent({
     },
     printTable() {
       window.print()
+      // var printwin = window.open("");
+      // printwin.document.write(document.getElementById("print-this").innerHTML);
+      // printwin.stop();
+      // printwin.print();
+      // printwin.close();
     },
     viewExpense(props) {
       api
@@ -623,10 +628,10 @@ export default defineComponent({
       //   });
       // }
 
-      axios
-        .get("http://127.0.0.1:8000/download_excel", {
+      api
+        .get("/download_excel", {
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080/",
+            "Access-Control-Allow-Origin": "*",
             Authorization: "Bearer " + localStorage.getItem("authToken"),
           },
         })
