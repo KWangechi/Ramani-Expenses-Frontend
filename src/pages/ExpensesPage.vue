@@ -1,6 +1,16 @@
 <template>
   <br />
   <div class="text-h5 q-ml-md">Total Balance: {{ total_balance }}</div>
+
+  <q-btn
+    color="secondary"
+    icon-right="print"
+    label="Print Table"
+    class="float-right q-mr-lg"
+    @click="printTable()"
+  />
+  <br />
+  <br />
   <q-page>
     <q-table
       id="my-table-id"
@@ -15,7 +25,7 @@
       no-results-label="The filter didn't uncover any results"
     >
       <!-- export to csv functionality -->
-      <template v-slot:top-right>
+      <template v-slot:top-right v-if="expenses.length > 0">
         <q-btn
           color="primary"
           icon-right="archive"
@@ -273,8 +283,7 @@ import { mapActions, mapState } from "pinia";
 import Swal from "sweetalert2";
 import { api } from "src/boot/axios";
 import { useAuthStore } from "src/stores/auth";
-import { exportFile } from "quasar";
-import { read, writeFileXLSX } from "xlsx";
+import axios from "axios";
 
 export default defineComponent({
   name: "ExpensesPage",
@@ -430,6 +439,9 @@ export default defineComponent({
     getUser() {
       this.store.getUser();
     },
+    printTable() {
+      window.print()
+    },
     viewExpense(props) {
       api
         .get(`/expenses/${props.id}`, {
@@ -583,66 +595,54 @@ export default defineComponent({
     },
 
     exportTable() {
-      var XLSX = require("xlsx");
-      // // const status = exportFile("important.csv", "A new file that has been exported as a CSV file", "text/csv");
+      // const content = [this.columns.map((col) => this.wrapCsvValue(col.label))]
+      //   .concat(
+      //     this.rows.map((row) =>
+      //       this.columns
+      //         .map((col) =>
+      //           wrapCsvValue(
+      //             typeof col.field === "function"
+      //               ? col.field(row)
+      //               : row[col.field === void 0 ? col.name : col.field],
+      //             col.format,
+      //             row
+      //           )
+      //         )
+      //         .join(",")
+      //     )
+      //   )
+      //   .join("\r\n");
 
-      // // if (status === true) {
-      // //   console.log("The table should be exported!");
-      // // } else {
-      // //   // browser denied it
-      // //   console.log("Error: " + status);
-      // // }
+      // const status = exportFile("table-export.csv", content, "text/csv");
 
-      // // Acquire Data (reference to the HTML table)
-      // var table_elt = document.getElementById('#my-table-id');
-
-      // // Extract Data (create a workbook object from the table)
-      // var workbook = XLSX.utils.table_to_book(table_elt);
-
-      // const status = exportFile("csv-to-excel.xls", workbook, "text/csv");
-
-      // if (status === true) {
-      //   console.log("The table should be exported!");
-      // } else {
-      //   // browser denied it
-      //   console.log("Error: " + status);
+      // if (status !== true) {
+      //   $q.notify({
+      //     message: "Browser denied file download...",
+      //     color: "negative",
+      //     icon: "warning",
+      //   });
       // }
 
-      // console.log(table_elt)
-
-      const content = [this.columns.map((col) => this.wrapCsvValue(col.label))]
-        .concat(
-          this.rows.map((row) =>
-            this.columns
-              .map((col) =>
-                wrapCsvValue(
-                  typeof col.field === "function"
-                    ? col.field(row)
-                    : row[col.field === void 0 ? col.name : col.field],
-                  col.format,
-                  row
-                )
-              )
-              .join(",")
-          )
-        )
-        .join("\r\n");
-
-      const status = exportFile("table-export.csv", content, "text/csv");
-
-      if (status !== true) {
-        $q.notify({
-          message: "Browser denied file download...",
-          color: "negative",
-          icon: "warning",
+      axios
+        .get("http://127.0.0.1:8000/download_excel", {
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080/",
+            Authorization: "Bearer " + localStorage.getItem("authToken"),
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((errors) => {
+          console.log(errors);
         });
-      }
     },
 
     wrapCsvValue(val, formatFn, row) {
       let formatted = formatFn !== void 0 ? formatFn(val, row) : val;
 
-      formatted = formatted === void 0 || formatted === null ? "" : String(formatted);
+      formatted =
+        formatted === void 0 || formatted === null ? "" : String(formatted);
 
       formatted = formatted.split('"').join('""');
       /**
