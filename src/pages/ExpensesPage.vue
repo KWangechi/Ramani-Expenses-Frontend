@@ -3,7 +3,7 @@
   <div class="text-h5 q-ml-md">Total Balance: {{ total_balance }}</div>
 
   <q-btn
-    color="secondary"
+    color="primary"
     icon-right="print"
     label="Print Table"
     class="float-right q-mr-lg"
@@ -11,10 +11,10 @@
   />
   <br />
   <br />
-  <q-page id="print-this">
+  <q-page>
     <q-table
       id="my-table-id"
-      class="q-ma-md large-screen-only print-this"
+      class="q-ma-md large-screen-only"
       title="My Expenses"
       :rows="expenses"
       :columns="columns"
@@ -25,7 +25,7 @@
       no-results-label="The filter didn't uncover any results"
     >
       <!-- export to csv functionality -->
-      <template v-slot:top-right v-if="expenses.length > 0">
+      <template v-slot:top-right>
         <q-btn
           color="primary"
           icon-right="archive"
@@ -414,9 +414,9 @@ export default defineComponent({
       getUser: "getUser",
     }),
 
-    getSelectedString() {
-      return console.log(JSON.stringify(this.selected));
-    },
+    // getSelectedString() {
+    //   return console.log(JSON.stringify(this.selected));
+    // },
   },
   created() {
     // if(!this.store.setUser()){
@@ -441,11 +441,6 @@ export default defineComponent({
     },
     printTable() {
       window.print()
-      // var printwin = window.open("");
-      // printwin.document.write(document.getElementById("print-this").innerHTML);
-      // printwin.stop();
-      // printwin.print();
-      // printwin.close();
     },
     viewExpense(props) {
       api
@@ -628,8 +623,8 @@ export default defineComponent({
       //   });
       // }
 
-      api
-        .get("/download_excel", {
+      axios
+        .get("http://127.0.0.1:8000/api/v1/download_excel", {
           headers: {
             "Access-Control-Allow-Origin": "*",
             Authorization: "Bearer " + localStorage.getItem("authToken"),
